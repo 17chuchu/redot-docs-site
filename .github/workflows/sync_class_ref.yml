@@ -51,8 +51,7 @@ jobs:
 
       - name: Remove old documentation
         run: |
-          pwd
-          rm ~/docs/Classes/class_*.md
+          rm *docs/Classes/class_*.md
 
       - name: Build new documentation
         run: |
