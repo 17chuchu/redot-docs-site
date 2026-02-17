@@ -48,23 +48,6 @@ jobs:
         run: |
           rm ${{ github.workspace }}/docs/Classes/class_*.md
 
-      - name: Submit a pull-request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: 'classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})'
-          branch: 'classref/sync-${{ steps.engine.outputs.rev_hash_short }}'
-          add-paths: '${{ github.workspace }}/docs/Classes'
-          delete-branch: true
-
-          # Configure the commit author.
-          author: 'Redot Organization <noreply@redotengine.org>'
-          committer: 'Redot Organization <noreply@redotengine.org>'
-
-          # Configure the pull-request.
-          title: 'classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})'
-          body: 'Update Redot API online class reference to match the engine at https://github.com/Redot-Engine/redot-engine/commit/${{ steps.engine.outputs.rev_hash }} (`${{ env.engine_rev }}`).'
-          labels: 'area:class reference,bug,enhancement'
-
       - name: Build new documentation
         run: |
           ./.engine-src/doc/tools/make_md.py --color -o ${{ github.workspace }}/docs/Classes -l en ./.engine-src/doc/classes ./.engine-src/modules ./.engine-src/platform
@@ -85,3 +68,12 @@ jobs:
           title: 'classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})'
           body: 'Update Redot API online class reference to match the engine at https://github.com/Redot-Engine/redot-engine/commit/${{ steps.engine.outputs.rev_hash }} (`${{ env.engine_rev }}`).'
           labels: 'area:class reference,bug,enhancement'
+
+      - name: Commit additional changes
+        run: |
+          git checkout classref/sync-${{ steps.engine.outputs.rev_hash_short }}
+          git config user.name Redot Organization
+          git config user.email noreply@redotengine.org
+          git add '${{ github.workspace }}/docs/Classes'
+          git commit -m "classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})"
+          git push
