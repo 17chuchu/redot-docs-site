@@ -57,7 +57,7 @@ jobs:
         with:
           commit-message: 'classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})'
           branch: 'classref/sync-${{ steps.engine.outputs.rev_hash_short }}'
-          add-paths: './classes'
+          add-paths: './docs/Classes'
           delete-branch: true
 
           # Configure the commit author.
