@@ -57,7 +57,8 @@ jobs:
 
       - name: Build new documentation
         run: |
-          ./.engine-src/doc/tools/make_md.py --color -o ${{ github.workspace }}/docs/Classes -l en ./.engine-src/doc/classes ./.engine-src/modules ./.engine-src/platform
+          ./.engine-src/doc/tools/make_md.py --color -o ${{ github.workspace }}/class_md -l en ./.engine-src/doc/classes ./.engine-src/modules ./.engine-src/platform
+          cp -r ${{ github.workspace }}/class_md ${{ github.workspace }}/docs/Classes
 
       - name: Submit a pull-request
         uses: peter-evans/create-pull-request@v7
@@ -81,6 +82,6 @@ jobs:
           git checkout classref/sync-${{ steps.engine.outputs.rev_hash_short }}
           git config user.name Redot Organization
           git config user.email noreply@redotengine.org
-          git add ${{ github.workspace }}/docs/Classes
+          cp -r ${{ github.workspace }}/class_md ${{ github.workspace }}/docs/Classes
           git commit -m "classref: Sync with current ${{ env.engine_rev }} branch (${{ steps.engine.outputs.rev_hash_short }})"
           git push
